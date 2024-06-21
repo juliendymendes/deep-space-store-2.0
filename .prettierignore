@@ -1,0 +1,8 @@
+.nuxt
+node_modules
+*.yaml
+*.json
+*.config.js
+*.md
+*.config.ts
+*.config.mjs
