@@ -5,6 +5,6 @@ export default interface PaymentData {
 	cardNumber?: string;
 	cardOwnerName?: string;
 	cardExpirationDate?: string;
-	cardSecurityCode?: number;
+	cardSecurityCode?: number | null;
 	cpf: string;
 }

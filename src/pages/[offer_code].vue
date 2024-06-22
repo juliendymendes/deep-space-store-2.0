@@ -104,9 +104,9 @@
 						<!-- PAYMENT DATA FORM -->
 						<v-stepper-window-item value="3">
 							<v-radio-group v-model="paymentData.paymentType" inline>
-								<v-radio color="primary" label="PIX" value="pix"></v-radio>
+								<v-radio color="primary" label="PIX" value="pix" @click="clearCreditCardData"></v-radio>
 								<v-radio color="primary" label="Cartão de crédito" value="credito"></v-radio>
-								<v-radio color="primary" label="Boleto" value="boleto"></v-radio>
+								<v-radio color="primary" label="Boleto" value="boleto" @click="clearCreditCardData"></v-radio>
 							</v-radio-group>
 
 							<v-form ref="paymentDataForm">
@@ -168,9 +168,11 @@ import PersonalData from '@/types/PersonalData';
 import { ref } from 'vue';
 import { vMaska } from 'maska/vue';
 import Offer from '@/types/Offer';
+import OrderCreated from '@/types/OrderCreated';
 const stepper = ref(0);
 const route = useRoute();
 const offer = ref<Offer | null>(null);
+const orderCreated = ref<OrderCreated | null>(null);
 const personalData = ref<PersonalData>({
 	name: '',
 	email: '',
@@ -251,12 +253,21 @@ async function getOffer() {
 async function finalizeOrder() {
 	const valid = await validateForms();
 	if (valid) {
-		console.log('Personal data');
-		console.log(personalData.value);
-		console.log('Delivery data');
-		console.log(deliveryData.value);
-		console.log('Payment data');
-		console.log(paymentData.value);
+		const bodyContent = {
+			...personalData.value,
+			...deliveryData.value,
+			...paymentData.value,
+		};
+		const response = await fetch(`/offers/${offer_code}/create_order`, {
+			method: 'POST',
+			body: JSON.stringify(bodyContent),
+		});
+
+		if (response.ok) {
+			orderCreated.value = await response.json();
+		} else {
+			console.error(response);
+		}
 	} else {
 		console.log('dados inválidos');
 	}
@@ -312,5 +323,12 @@ function searchAddressByCep(value: string) {
 	} else {
 		console.log('CEP inválido');
 	}
+}
+
+function clearCreditCardData() {
+	paymentData.value.cardExpirationDate = '';
+	paymentData.value.cardNumber = '';
+	paymentData.value.cardOwnerName = '';
+	paymentData.value.cardSecurityCode = null;
 }
 </script>
