@@ -13,8 +13,15 @@ import App from './App.vue';
 // Composables
 import { createApp } from 'vue';
 
-const app = createApp(App);
+async function enableMocking() {
+	const { worker } = await import('./mocks/browser');
 
-registerPlugins(app);
+	return worker.start();
+}
 
-app.mount('#app');
+enableMocking().then(() => {
+	const app = createApp(App);
+
+	registerPlugins(app);
+	app.mount('#app');
+});
