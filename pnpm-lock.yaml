@@ -14,6 +14,9 @@ importers:
       core-js:
         specifier: ^3.34.0
         version: 3.37.1
+      maska:
+        specifier: 3.0.0-beta4
+        version: 3.0.0-beta4
       roboto-fontface:
         specifier: '*'
         version: 0.10.0
@@ -1324,6 +1327,9 @@ packages:
 
   magic-string@0.30.10:
     resolution: {integrity: sha512-iIRwTIf0QKV3UAnYK4PU8uiEc4SRh5jX0mwpIwETPpHdhVM4f53RSwS/vXvN1JhGX+Cs7B8qIq3d6AH49O5fAQ==}
+
+  maska@3.0.0-beta4:
+    resolution: {integrity: sha512-r+KpVnpbeRPs2JORv69Ih+6crxfHpeOPcFTKda08g5p+un+//Pb0AxMZm8ya2/eIAEOFJBvGSweiPyE8hK76KQ==}
 
   merge2@1.4.1:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
@@ -3256,6 +3262,8 @@ snapshots:
   magic-string@0.30.10:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  maska@3.0.0-beta4: {}
 
   merge2@1.4.1: {}
 
