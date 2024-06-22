@@ -133,7 +133,7 @@
 											<v-text-field
 												v-model="paymentData.cardExpirationDate"
 												v-maska="'##/####'"
-												:rules="[rules.required]"
+												:rules="[rules.required, rules.cardExpirationDate]"
 												label="Data de validade"></v-text-field>
 										</v-col>
 										<v-col cols="12" sm="4">
@@ -206,6 +206,10 @@ const rules = ref({
 			return pattern.test(value) || 'E-mail inválido';
 		}
 	},
+	cardExpirationDate: (value: string) => {
+		if (validateCardExpirationDate(value)) return true;
+		return 'Data de validade inválida';
+	},
 });
 
 const personalDataForm = ref<HTMLFormElement>();
@@ -251,8 +255,9 @@ async function getOffer() {
 }
 
 async function finalizeOrder() {
-	const valid = await validateForms();
-	if (valid) {
+	const isCardExpirationDateValid = validateCardExpirationDate(paymentData.value.cardExpirationDate);
+	const isFormValid = await validateForms();
+	if (isFormValid && isCardExpirationDateValid) {
 		const bodyContent = {
 			...personalData.value,
 			...deliveryData.value,
@@ -330,5 +335,24 @@ function clearCreditCardData() {
 	paymentData.value.cardNumber = '';
 	paymentData.value.cardOwnerName = '';
 	paymentData.value.cardSecurityCode = null;
+}
+
+function validateCardExpirationDate(date) {
+	const [month, year] = date.split('/');
+	const monthNum = parseInt(month);
+	const yearNum = parseInt(year);
+	if (monthNum > 12 || monthNum < 0) return false;
+
+	const today = new Date();
+	const currentMonth = today.getMonth() + 1;
+	const currentYear = today.getFullYear();
+
+	if (monthNum >= currentMonth && yearNum >= currentYear) {
+		return true;
+	} else if (monthNum < currentMonth && yearNum > currentYear) {
+		return true;
+	}
+
+	return false;
 }
 </script>
