@@ -1,24 +1,30 @@
 <!-- eslint-disable vue/valid-v-slot -->
 <template>
 	<v-container class="mt-15">
-		<v-row>
+		<v-row class="mb-5">
 			<v-col cols="12" md="6">
 				<v-card>
-					<v-carousel height="400" show-arrows="hover" hide-delimiter-background>
-						<v-carousel-item v-for="i in slides" :key="i">
-							<v-img aspect-ratio="16/9" cover src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"></v-img>
+					<v-carousel height="400" touch show-arrows="hover" hide-delimiter-background>
+						<v-carousel-item v-for="i in offer?.imagesPaths" :key="i">
+							<v-img aspect-ratio="16/9" cover :src="i"></v-img>
 						</v-carousel-item>
 					</v-carousel>
-					<v-card-title class="text-h5 mt-5">Projetor de luz de galáxia em forma de astronauta</v-card-title>
-					<v-card-subtitle>R$ 100,00</v-card-subtitle>
+					<v-card-title class="text-h5 mt-5">{{ offer?.name }}</v-card-title>
+					<v-card-subtitle>R$ {{ offer?.price.toLocaleString() }}</v-card-subtitle>
 					<v-card-text>
 						<p class="text-subtitle-1">Este item também acompanha:</p>
-						<v-list :items="colors">
+						<v-list :items="offer?.itens">
 							<template v-slot:prepend>
-								<v-icon>mdi-circle-small</v-icon>
+								<v-icon icon="mdi mdi-circle-small"></v-icon>
 							</template>
 						</v-list>
 					</v-card-text>
+					<div class="ma-4 mt-0">
+						<p class="text-subtitle-1 mb-4">Formas de pagamento</p>
+						<v-chip color="primary me-3" v-for="item in paymentOptions" :key="item">
+							{{ item }}
+						</v-chip>
+					</div>
 				</v-card>
 			</v-col>
 
@@ -161,7 +167,10 @@ import PaymentData from '@/types/PaymentData';
 import PersonalData from '@/types/PersonalData';
 import { ref } from 'vue';
 import { vMaska } from 'maska/vue';
+import Offer from '@/types/Offer';
 const stepper = ref(0);
+const route = useRoute();
+const offer = ref<Offer | null>(null);
 const personalData = ref<PersonalData>({
 	name: '',
 	email: '',
@@ -201,8 +210,43 @@ const personalDataForm = ref<HTMLFormElement>();
 const deliveryDataForm = ref<HTMLFormElement>();
 const paymentDataForm = ref<HTMLFormElement>();
 
-const colors = ref(['indigo', 'warning', 'pink darken-2', 'red lighten-1', 'deep-purple accent-4']);
-const slides = ref(['First', 'Second', 'Third', 'Fourth', 'Fifth']);
+const { offer_code } = route.params;
+
+onMounted(() => {
+	getOffer();
+});
+
+const paymentOptions = computed(() => {
+	const options: string[] = [];
+	offer.value?.paymentOptions.map((opt) => {
+		switch (opt) {
+			case 'boleto':
+				options.push('Boleto');
+				break;
+			case 'credito':
+				options.push('Cartão de crédito');
+				break;
+			case 'pix':
+				options.push('PIX');
+				break;
+		}
+		return true;
+	});
+
+	return options;
+});
+// FUNCTIONS
+async function getOffer() {
+	const response = await fetch(`/offers/${offer_code}`, {
+		method: 'GET',
+	});
+	if (response.ok) {
+		const data = await response.json();
+		offer.value = data;
+	} else {
+		console.error(response);
+	}
+}
 
 async function finalizeOrder() {
 	const valid = await validateForms();
