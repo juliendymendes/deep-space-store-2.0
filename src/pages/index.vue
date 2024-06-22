@@ -33,6 +33,7 @@
 					</v-stepper-header>
 
 					<v-stepper-window v-model="stepper">
+						<!-- PERSONAL DATA FORM -->
 						<v-stepper-window-item value="1">
 							<v-form ref="personalDataForm">
 								<v-text-field
@@ -53,13 +54,15 @@
 							</v-form>
 						</v-stepper-window-item>
 
+						<!-- DELIVERY DATA FORM -->
 						<v-stepper-window-item value="2">
 							<v-form ref="deliveryDataForm">
 								<v-text-field
 									v-maska="'#####-###'"
 									v-model="deliveryData.cep"
 									:rules="[rules.required]"
-									label="CEP"></v-text-field>
+									label="CEP"
+									@change="() => searchAddressByCep(deliveryData.cep)"></v-text-field>
 
 								<v-row>
 									<v-col cols="12" sm="8">
@@ -92,6 +95,7 @@
 							</v-form>
 						</v-stepper-window-item>
 
+						<!-- PAYMENT DATA FORM -->
 						<v-stepper-window-item value="3">
 							<v-radio-group v-model="paymentData.paymentType" inline>
 								<v-radio color="primary" label="PIX" value="pix"></v-radio>
@@ -158,7 +162,6 @@ import PersonalData from '@/types/PersonalData';
 import { ref } from 'vue';
 import { vMaska } from 'maska/vue';
 const stepper = ref(0);
-
 const personalData = ref<PersonalData>({
 	name: '',
 	email: '',
@@ -244,5 +247,26 @@ async function validateForms() {
 	const paymentDataResult = await paymentDataForm.value?.validate();
 	if (personalDataResult.valid && deliveryDataResult.valid && paymentDataResult.valid) return true;
 	return false;
+}
+
+function searchAddressByCep(value: string) {
+	if (/^(\d{5}-\d{3})$/.test(value)) {
+		fetch(`https://viacep.com.br/ws/${value}/json/`)
+			.then((res) => {
+				if (res.ok) {
+					return res.json();
+				}
+			})
+			.then((data) => {
+				console.log(data);
+				deliveryData.value.bairro = data.bairro;
+				deliveryData.value.cep = data.cep;
+				deliveryData.value.logradouro = data.logradouro;
+				deliveryData.value.localidade = data.localidade;
+				deliveryData.value.uf = data.uf;
+			});
+	} else {
+		console.log('CEP inválido');
+	}
 }
 </script>
