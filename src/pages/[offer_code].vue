@@ -55,7 +55,7 @@
 								<v-text-field
 									v-maska="'(##) ####-####'"
 									v-model="personalData.phone"
-									:rules="[rules.required]"
+									:rules="[rules.required, rules.phone]"
 									label="Telefone"></v-text-field>
 							</v-form>
 						</v-stepper-window-item>
@@ -66,7 +66,7 @@
 								<v-text-field
 									v-maska="'#####-###'"
 									v-model="deliveryData.cep"
-									:rules="[rules.required]"
+									:rules="[rules.required, rules.cep]"
 									label="CEP"
 									@change="() => searchAddressByCep(deliveryData.cep)"></v-text-field>
 
@@ -93,7 +93,7 @@
 										<v-text-field
 											v-model="deliveryData.uf"
 											v-maska="'@@'"
-											:rules="[rules.required]"
+											:rules="[rules.required, rules.uf]"
 											label="UF"></v-text-field>
 									</v-col>
 								</v-row>
@@ -113,14 +113,14 @@
 								<v-text-field
 									v-model="paymentData.cpf"
 									v-maska="'###.###.###-##'"
-									:rules="[rules.required]"
+									:rules="[rules.required, rules.cpf]"
 									label="CPF"></v-text-field>
 
 								<div v-if="paymentData.paymentType === 'credito'">
 									<v-text-field
 										v-maska="'####.####.####.####'"
 										v-model="paymentData.cardNumber"
-										:rules="[rules.required]"
+										:rules="[rules.required, rules.cardNumber]"
 										label="Número do cartão"></v-text-field>
 
 									<v-text-field
@@ -210,6 +210,11 @@ const rules = ref({
 		if (validateCardExpirationDate(value)) return true;
 		return 'Data de validade inválida';
 	},
+	cpf: (value: string) => validateCpf(value) || 'CPF inválido',
+	cep: (value: string) => validateCep(value) || 'CEP inválido',
+	cardNumber: (value: string) => validateCardNumber(value) || 'Número do cartão inválido',
+	phone: (value: string) => validatePhone(value) || 'Número de telefone inválido',
+	uf: (value: string) => value.length === 2 || 'UF precisa conter 2 caracteres',
 });
 
 const personalDataForm = ref<HTMLFormElement>();
@@ -255,9 +260,8 @@ async function getOffer() {
 }
 
 async function finalizeOrder() {
-	const isCardExpirationDateValid = validateCardExpirationDate(paymentData.value.cardExpirationDate);
 	const isFormValid = await validateForms();
-	if (isFormValid && isCardExpirationDateValid) {
+	if (isFormValid) {
 		const bodyContent = {
 			...personalData.value,
 			...deliveryData.value,
@@ -354,5 +358,20 @@ function validateCardExpirationDate(date) {
 	}
 
 	return false;
+}
+
+function validateCpf(cpf: string) {
+	return cpf.length === 14;
+}
+
+function validateCep(cep: string) {
+	return cep.length === 9;
+}
+
+function validateCardNumber(cardNumber: string) {
+	return cardNumber.length === 19;
+}
+function validatePhone(phone: string) {
+	return phone.length === 14;
 }
 </script>
