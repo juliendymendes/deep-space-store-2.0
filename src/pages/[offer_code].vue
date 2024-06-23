@@ -53,7 +53,7 @@
 									:rules="[rules.email]"
 									label="Email"></v-text-field>
 								<v-text-field
-									v-maska="'(##) ####-####'"
+									v-maska="'(##) #####-####'"
 									v-model="personalData.phone"
 									:rules="[rules.required, rules.phone]"
 									label="Telefone"></v-text-field>
@@ -168,11 +168,10 @@ import PersonalData from '@/types/PersonalData';
 import { ref } from 'vue';
 import { vMaska } from 'maska/vue';
 import Offer from '@/types/Offer';
-import OrderCreated from '@/types/OrderCreated';
 const stepper = ref(0);
 const route = useRoute();
+const router = useRouter();
 const offer = ref<Offer | null>(null);
-const orderCreated = ref<OrderCreated | null>(null);
 const personalData = ref<PersonalData>({
 	name: '',
 	email: '',
@@ -221,6 +220,7 @@ const personalDataForm = ref<HTMLFormElement>();
 const deliveryDataForm = ref<HTMLFormElement>();
 const paymentDataForm = ref<HTMLFormElement>();
 
+// @ts-ignore
 const { offer_code } = route.params;
 
 onMounted(() => {
@@ -273,7 +273,8 @@ async function finalizeOrder() {
 		});
 
 		if (response.ok) {
-			orderCreated.value = await response.json();
+			const order = await response.json();
+			router.push(`/thankyou/${order.orderCode}`);
 		} else {
 			console.error(response);
 		}
@@ -372,6 +373,6 @@ function validateCardNumber(cardNumber: string) {
 	return cardNumber.length === 19;
 }
 function validatePhone(phone: string) {
-	return phone.length === 14;
+	return phone.length === 15;
 }
 </script>

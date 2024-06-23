@@ -19,5 +19,6 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/[offer_code]': RouteRecordInfo<'/[offer_code]', '/:offer_code', { offer_code: ParamValue<true> }, { offer_code: ParamValue<false> }>,
+    '/[order_code]': RouteRecordInfo<'/[order_code]', '/:order_code', { order_code: ParamValue<true> }, { order_code: ParamValue<false> }>,
   }
 }

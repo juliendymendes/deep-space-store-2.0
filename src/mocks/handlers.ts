@@ -1,5 +1,5 @@
 import Offer from '@/types/Offer';
-import OrderResquest from '@/types/OrderCreated';
+import OrderRequest from '@/types/OrderCreated';
 
 import { http, HttpResponse } from 'msw';
 
@@ -46,7 +46,7 @@ const allOffers = new Map<string, Offer>([
 		},
 	],
 ]);
-const allOrders = new Map();
+const allOrders = new Map<string, OrderRequest>();
 
 export const handlers = [
 	// Return an offer by code
@@ -66,7 +66,7 @@ export const handlers = [
 
 	// Create an order
 	http.post('/offers/:offerCode/create_order', async ({ request, params }) => {
-		const newOrder = (await request.json()) as OrderResquest;
+		const newOrder = (await request.json()) as OrderRequest;
 		if (newOrder.cpf === '00000000000' || newOrder.cpf === '000.000.000-00') {
 			return HttpResponse.json(null, { status: 400, statusText: 'CPF incorreto. Por favor, tente novamente.' });
 		}
@@ -89,10 +89,25 @@ export const handlers = [
 				break;
 		}
 
-		allOrders.set(offerCode, newOrder);
+		allOrders.set(newOrder.orderCode, newOrder);
 		return HttpResponse.json(newOrder, {
 			status: 201,
 			statusText: 'Pedido realizado com sucesso!',
 		});
+	}),
+
+	// Return an order by code
+	http.get('/orders/:orderCode', ({ params }) => {
+		const { orderCode } = params;
+
+		const order = allOrders.get(orderCode.toString());
+
+		if (!order) {
+			return new HttpResponse(null, {
+				status: 404,
+				statusText: 'Pedido não encontrado.',
+			});
+		}
+		return HttpResponse.json(order);
 	}),
 ];
