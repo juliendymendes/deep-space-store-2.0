@@ -67,7 +67,7 @@ export const handlers = [
 	// Create an order
 	http.post('/offers/:offerCode/create_order', async ({ request, params }) => {
 		const newOrder = (await request.json()) as OrderResquest;
-		if (newOrder.cpf === '00000000000') {
+		if (newOrder.cpf === '00000000000' || newOrder.cpf === '000.000.000-00') {
 			return HttpResponse.json(null, { status: 400, statusText: 'CPF incorreto. Por favor, tente novamente.' });
 		}
 

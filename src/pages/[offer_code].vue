@@ -29,13 +29,13 @@
 			</v-col>
 
 			<v-col cols="12" md="6">
-				<v-stepper alt-labels editable color="primary" v-model="stepper">
+				<v-stepper alt-labels color="primary" v-model="stepper">
 					<v-stepper-header>
-						<v-stepper-item title="Dados pessoais" value="1" complete editable> </v-stepper-item>
+						<v-stepper-item title="Dados pessoais" value="1" complete> </v-stepper-item>
 
-						<v-stepper-item title="Entrega" value="2" complete editable> </v-stepper-item>
+						<v-stepper-item title="Entrega" value="2" complete> </v-stepper-item>
 
-						<v-stepper-item title="Pagamento" value="3" complete editable> </v-stepper-item>
+						<v-stepper-item title="Pagamento" value="3" complete> </v-stepper-item>
 					</v-stepper-header>
 
 					<v-stepper-window v-model="stepper">
@@ -341,7 +341,7 @@ function clearCreditCardData() {
 	paymentData.value.cardSecurityCode = null;
 }
 
-function validateCardExpirationDate(date) {
+function validateCardExpirationDate(date: string) {
 	const [month, year] = date.split('/');
 	const monthNum = parseInt(month);
 	const yearNum = parseInt(year);
