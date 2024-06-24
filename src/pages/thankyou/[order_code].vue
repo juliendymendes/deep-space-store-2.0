@@ -11,8 +11,9 @@
 			</p>
 			<div v-else>
 				<p class="mb-4 text-medium-emphasis text-h6">Escaneie o código abaixo para finalizar o pagamento</p>
+				<QRCode :width="280" v-if="order?.paymentType === 'pix'" :data="order?.orderCode || ''" />
 
-				<v-img max-width="500" class="mx-auto" :src="order?.paymentCodePath"></v-img>
+				<v-img v-if="order?.paymentType === 'boleto'" max-width="500" class="mx-auto" src="/barcode.png"></v-img>
 			</div>
 
 			<div class="text-start mt-5 ms-sm-11">

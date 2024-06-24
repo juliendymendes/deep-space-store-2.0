@@ -18,6 +18,7 @@
     "maska": "3.0.0-beta4",
     "roboto-fontface": "*",
     "vue": "^3.4.21",
+    "vue-qrcode": "^2.2.2",
     "vuetify": "^3.5.8"
   },
   "devDependencies": {
