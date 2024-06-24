@@ -1,6 +1,7 @@
 <template>
 	<v-container>
-		<v-sheet class="pa-4 text-center mx-auto" elevation="12" max-width="700" rounded="lg" width="100%">
+		<OrderNotFound v-if="!order" />
+		<v-sheet v-else class="pa-4 text-center mx-auto" elevation="12" max-width="700" rounded="lg" width="100%">
 			<v-icon class="mb-5" color="success" icon="mdi-check-circle" size="112"></v-icon>
 
 			<h2 class="text-h5 mb-5">Pedido realizado com sucesso!</h2>
