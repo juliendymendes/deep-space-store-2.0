@@ -6,9 +6,9 @@
 				<v-card>
 					<v-sheet class="mx-auto" elevation="8" max-width="700" max-height="700">
 						<v-expand-transition>
-							<v-img v-if="model != null" :src="offer?.imagesPaths[model]" class="w-100"></v-img>
+							<v-img v-if="currentImage != null" :src="offer?.imagesPaths[currentImage]" class="w-100"></v-img>
 						</v-expand-transition>
-						<v-slide-group v-model="model" class="pa-4" selected-class="bg-primary" show-arrows>
+						<v-slide-group v-model="currentImage" class="pa-4" selected-class="bg-primary" show-arrows>
 							<v-slide-group-item
 								v-for="i in offer?.imagesPaths"
 								:key="i"
@@ -201,7 +201,7 @@ const personalData = ref<PersonalData>({
 	phone: '',
 });
 
-const model = ref(null);
+const currentImage = ref(0);
 
 const deliveryData = ref<DeliveryAddress>({
 	cep: '',
