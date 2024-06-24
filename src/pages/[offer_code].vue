@@ -4,11 +4,26 @@
 		<v-row class="mb-5">
 			<v-col cols="12" md="6">
 				<v-card>
-					<v-carousel height="400" touch show-arrows="hover" hide-delimiter-background>
-						<v-carousel-item v-for="i in offer?.imagesPaths" :key="i">
-							<v-img aspect-ratio="16/9" cover :src="i"></v-img>
-						</v-carousel-item>
-					</v-carousel>
+					<v-sheet class="mx-auto" elevation="8" max-width="700" max-height="700">
+						<v-expand-transition>
+							<v-img v-if="model != null" :src="offer?.imagesPaths[model]" class="w-100"></v-img>
+						</v-expand-transition>
+						<v-slide-group v-model="model" class="pa-4" selected-class="bg-primary" show-arrows>
+							<v-slide-group-item
+								v-for="i in offer?.imagesPaths"
+								:key="i"
+								v-slot="{ isSelected, toggle, selectedClass }">
+								<v-img :src="i" :class="['ma-4', selectedClass]" cover @click="toggle">
+									<div class="d-flex fill-height align-center justify-center">
+										<v-scale-transition>
+											<v-icon v-if="isSelected" color="white" icon="mdi-close-circle-outline" size="48"></v-icon>
+										</v-scale-transition>
+									</div>
+								</v-img>
+							</v-slide-group-item>
+						</v-slide-group>
+					</v-sheet>
+
 					<v-card-title class="text-h5 mt-5">{{ offer?.name }}</v-card-title>
 					<v-card-subtitle>{{ formatPrice(offer?.price!) }}</v-card-subtitle>
 					<v-card-text>
@@ -177,12 +192,14 @@ const appStore = useAppStore();
 const alertStore = useAlertStore();
 const route = useRoute();
 const router = useRouter();
-const offer = ref<Offer | null>(null);
+const offer = ref<Offer>();
 const personalData = ref<PersonalData>({
 	name: '',
 	email: '',
 	phone: '',
 });
+
+const model = ref(null);
 
 const deliveryData = ref<DeliveryAddress>({
 	cep: '',
