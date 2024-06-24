@@ -3,51 +3,7 @@
 	<v-container class="mt-15">
 		<v-row class="mb-5">
 			<v-col cols="12" md="6">
-				<v-card>
-					<v-sheet class="mx-auto w-100" elevation="8" max-width="700">
-						<v-expand-transition>
-							<v-img
-								v-if="currentImage != null"
-								:src="offer?.imagesPaths[currentImage]"
-								cover
-								max-width="700"
-								max-height="500"></v-img>
-						</v-expand-transition>
-						<v-slide-group v-model="currentImage" class="pa-4" selected-class="bg-primary" show-arrows>
-							<v-slide-group-item
-								v-for="i in offer?.imagesPaths"
-								:key="i"
-								v-slot="{ isSelected, toggle, selectedClass }">
-								<v-img :src="i" :class="['ma-4', selectedClass]" cover @click="toggle" max-width="150">
-									<div class="d-flex fill-height align-center justify-center">
-										<v-scale-transition>
-											<v-icon v-if="isSelected" color="white" icon="mdi-close-circle-outline" size="48"></v-icon>
-										</v-scale-transition>
-									</div>
-								</v-img>
-							</v-slide-group-item>
-						</v-slide-group>
-					</v-sheet>
-
-					<div class="px-5 pb-3">
-						<v-card-title class="text-h5 mt-5">{{ offer?.name }}</v-card-title>
-						<v-card-subtitle>{{ formatPrice(offer?.price!) }}</v-card-subtitle>
-						<v-card-text>
-							<p class="text-subtitle-1">Este item também acompanha:</p>
-							<v-list :items="offer?.itens">
-								<template v-slot:prepend>
-									<v-icon icon="mdi mdi-circle-small"></v-icon>
-								</template>
-							</v-list>
-						</v-card-text>
-						<div class="ma-4 mt-0">
-							<p class="text-subtitle-1 mb-4">Formas de pagamento</p>
-							<v-chip color="primary me-3" v-for="item in paymentOptions" :key="item">
-								{{ item }}
-							</v-chip>
-						</div>
-					</div>
-				</v-card>
+				<OfferCard :offer="offer" />
 			</v-col>
 
 			<v-col cols="12" md="6">
@@ -63,116 +19,22 @@
 					<v-stepper-window v-model="stepper">
 						<!-- PERSONAL DATA FORM -->
 						<v-stepper-window-item value="1">
-							<v-form ref="personalDataForm">
-								<v-text-field
-									v-model="personalData.name"
-									:rules="[rules.required]"
-									label="Nome completo"></v-text-field>
-
-								<v-text-field
-									type="email"
-									v-model="personalData.email"
-									:rules="[rules.email]"
-									label="Email"></v-text-field>
-								<v-text-field
-									v-maska="'(##) #####-####'"
-									v-model="personalData.phone"
-									:rules="[rules.required, rules.phone]"
-									label="Telefone"></v-text-field>
-							</v-form>
+							<PersonalDataForm />
 						</v-stepper-window-item>
 
 						<!-- DELIVERY DATA FORM -->
 						<v-stepper-window-item value="2">
-							<v-form ref="deliveryDataForm">
-								<v-text-field
-									v-maska="'#####-###'"
-									v-model="deliveryData.cep"
-									:rules="[rules.required, rules.cep]"
-									label="CEP"
-									@change="() => searchAddressByCep(deliveryData.cep)"></v-text-field>
-
-								<v-row>
-									<v-col cols="12" sm="8">
-										<v-text-field
-											v-model="deliveryData.logradouro"
-											:rules="[rules.required]"
-											label="Rua"></v-text-field>
-									</v-col>
-									<v-col cols="12" sm="4">
-										<v-text-field v-model="deliveryData.numero" :rules="[rules.required]" label="Número"></v-text-field>
-									</v-col>
-								</v-row>
-								<v-text-field v-model="deliveryData.bairro" :rules="[rules.required]" label="Bairro"></v-text-field>
-								<v-row>
-									<v-col cols="12" sm="8">
-										<v-text-field
-											v-model="deliveryData.localidade"
-											:rules="[rules.required]"
-											label="Cidade"></v-text-field>
-									</v-col>
-									<v-col cols="12" sm="4">
-										<v-text-field
-											v-model="deliveryData.uf"
-											v-maska="'@@'"
-											:rules="[rules.required, rules.uf]"
-											label="UF"></v-text-field>
-									</v-col>
-								</v-row>
-								<v-text-field v-model="deliveryData.complemento" label="Complemento"></v-text-field>
-							</v-form>
+							<DeliveryDataForm />
 						</v-stepper-window-item>
 
 						<!-- PAYMENT DATA FORM -->
 						<v-stepper-window-item value="3">
-							<v-radio-group v-model="paymentData.paymentType" inline>
-								<v-radio color="primary" label="PIX" value="pix" @click="clearCreditCardData"></v-radio>
-								<v-radio color="primary" label="Cartão de crédito" value="credito"></v-radio>
-								<v-radio color="primary" label="Boleto" value="boleto" @click="clearCreditCardData"></v-radio>
-							</v-radio-group>
-
-							<v-form ref="paymentDataForm">
-								<v-text-field
-									v-model="paymentData.cpf"
-									v-maska="'###.###.###-##'"
-									:rules="[rules.required, rules.cpf]"
-									label="CPF"></v-text-field>
-
-								<div v-if="paymentData.paymentType === 'credito'">
-									<v-text-field
-										v-maska="'####.####.####.####'"
-										v-model="paymentData.cardNumber"
-										:rules="[rules.required, rules.cardNumber]"
-										label="Número do cartão"></v-text-field>
-
-									<v-text-field
-										v-model="paymentData.cardOwnerName"
-										:rules="[rules.required]"
-										label="Nome no cartão"></v-text-field>
-
-									<v-row>
-										<v-col cols="12" sm="8">
-											<v-text-field
-												v-model="paymentData.cardExpirationDate"
-												v-maska="'##/####'"
-												:rules="[rules.required, rules.cardExpirationDate]"
-												label="Data de validade"></v-text-field>
-										</v-col>
-										<v-col cols="12" sm="4">
-											<v-text-field
-												type="number"
-												v-model="paymentData.cardSecurityCode"
-												:rules="[rules.required]"
-												label="CVV"></v-text-field>
-										</v-col>
-									</v-row>
-								</div>
-								<v-row>
-									<v-col cols="12" class="d-flex justify-end">
-										<v-btn color="primary" @click="finalizeOrder">Finalizar pedido</v-btn>
-									</v-col>
-								</v-row>
-							</v-form>
+							<PaymentDataForm />
+							<v-row>
+								<v-col cols="12" class="d-flex justify-end">
+									<v-btn color="primary" @click="finalizeOrder">Finalizar pedido</v-btn>
+								</v-col>
+							</v-row>
 						</v-stepper-window-item>
 					</v-stepper-window>
 					<v-stepper-actions next-text="Próximo" prev-text="Anterior" @click:next="next" @click:prev="stepper--">
@@ -184,72 +46,40 @@
 </template>
 
 <script lang="ts" setup>
-import DeliveryAddress from '@/types/DeliveryAddress';
-import PaymentData from '@/types/PaymentData';
-import PersonalData from '@/types/PersonalData';
 import { ref } from 'vue';
-import { vMaska } from 'maska/vue';
 import Offer from '@/types/Offer';
 
 import { useAppStore } from '@/stores/app';
 import { useAlertStore } from '@/stores/alertStore';
-import { formatPrice } from '@/utils/formatters';
+import OfferCard from '@/components/offer/OfferCard.vue';
+
+import PersonalDataForm from '@/components/forms/PersonalDataForm.vue';
+import { useOrderStore } from '@/stores/orderStore';
+import DeliveryDataForm from '@/components/forms/DeliveryDataForm.vue';
+
 const stepper = ref(0);
 const appStore = useAppStore();
 const alertStore = useAlertStore();
+
 const route = useRoute();
 const router = useRouter();
-const offer = ref<Offer>();
-const personalData = ref<PersonalData>({
+const offer = ref<Offer>({
+	code: '',
 	name: '',
-	email: '',
-	phone: '',
+	imagesPaths: [],
+	paymentOptions: [],
+	price: 0,
+	itens: [],
 });
-
-const currentImage = ref(0);
-
-const deliveryData = ref<DeliveryAddress>({
-	cep: '',
-	logradouro: '',
-	numero: null,
-	bairro: '',
-	localidade: '',
-	uf: '',
-	complemento: '',
-});
-
-const paymentData = ref<PaymentData>({
-	paymentType: 'pix',
-	cpf: '',
-});
-
-const rules = ref({
-	required: (value: string) => {
-		if (value) return true;
-		return 'Campo obrigatório.';
-	},
-	email: (value: string) => {
-		if (value) {
-			const pattern =
-				/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-			return pattern.test(value) || 'E-mail inválido';
-		}
-	},
-	cardExpirationDate: (value: string) => {
-		if (validateCardExpirationDate(value)) return true;
-		return 'Data de validade inválida';
-	},
-	cpf: (value: string) => validateCpf(value) || 'CPF inválido',
-	cep: (value: string) => validateCep(value) || 'CEP inválido',
-	cardNumber: (value: string) => validateCardNumber(value) || 'Número do cartão inválido',
-	phone: (value: string) => validatePhone(value) || 'Número de telefone inválido',
-	uf: (value: string) => value.length === 2 || 'UF precisa conter 2 caracteres',
-});
+const orderStore = useOrderStore();
 
 const personalDataForm = ref<HTMLFormElement>();
 const deliveryDataForm = ref<HTMLFormElement>();
 const paymentDataForm = ref<HTMLFormElement>();
 
+provide('personalDataFormRef', personalDataForm);
+provide('deliveryDataFormRef', deliveryDataForm);
+provide('paymentDataFormRef', paymentDataForm);
 // @ts-ignore
 const { offer_code } = route.params;
 
@@ -257,25 +87,6 @@ onMounted(() => {
 	getOffer();
 });
 
-const paymentOptions = computed(() => {
-	const options: string[] = [];
-	offer.value?.paymentOptions.map((opt) => {
-		switch (opt) {
-			case 'boleto':
-				options.push('Boleto');
-				break;
-			case 'credito':
-				options.push('Cartão de crédito');
-				break;
-			case 'pix':
-				options.push('PIX');
-				break;
-		}
-		return true;
-	});
-
-	return options;
-});
 // FUNCTIONS
 async function getOffer() {
 	appStore.loaderState = true;
@@ -302,9 +113,9 @@ async function finalizeOrder() {
 	const isFormValid = await validateForms();
 	if (isFormValid) {
 		const bodyContent = {
-			...personalData.value,
-			...deliveryData.value,
-			...paymentData.value,
+			...orderStore.personalData,
+			...orderStore.deliveryData,
+			...orderStore.paymentData,
 		};
 		const response = await fetch(`/offers/${offer_code}/create_order`, {
 			method: 'POST',
@@ -312,6 +123,7 @@ async function finalizeOrder() {
 		});
 
 		if (response.ok) {
+			orderStore.clearForms();
 			const order = await response.json();
 			router.push(`/thankyou/${order.orderCode}`);
 		} else {
@@ -338,6 +150,8 @@ async function finalizeOrder() {
 
 // Valida o formulário antes de passar para o próximo
 async function next() {
+	console.log(personalDataForm.value);
+
 	switch (stepper.value) {
 		case 0: {
 			const result = await personalDataForm.value?.validate();
@@ -365,67 +179,5 @@ async function validateForms() {
 	const paymentDataResult = await paymentDataForm.value?.validate();
 	if (personalDataResult.valid && deliveryDataResult.valid && paymentDataResult.valid) return true;
 	return false;
-}
-
-function searchAddressByCep(value: string) {
-	if (/^(\d{5}-\d{3})$/.test(value)) {
-		fetch(`https://viacep.com.br/ws/${value}/json/`)
-			.then((res) => {
-				if (res.ok) {
-					return res.json();
-				}
-			})
-			.then((data) => {
-				console.log(data);
-				deliveryData.value.bairro = data.bairro;
-				deliveryData.value.cep = data.cep;
-				deliveryData.value.logradouro = data.logradouro;
-				deliveryData.value.localidade = data.localidade;
-				deliveryData.value.uf = data.uf;
-			});
-	} else {
-		console.log('CEP inválido');
-	}
-}
-
-function clearCreditCardData() {
-	paymentData.value.cardExpirationDate = '';
-	paymentData.value.cardNumber = '';
-	paymentData.value.cardOwnerName = '';
-	paymentData.value.cardSecurityCode = null;
-}
-
-function validateCardExpirationDate(date: string) {
-	const [month, year] = date.split('/');
-	const monthNum = parseInt(month);
-	const yearNum = parseInt(year);
-	if (monthNum > 12 || monthNum < 0) return false;
-
-	const today = new Date();
-	const currentMonth = today.getMonth() + 1;
-	const currentYear = today.getFullYear();
-
-	if (monthNum >= currentMonth && yearNum >= currentYear) {
-		return true;
-	} else if (monthNum < currentMonth && yearNum > currentYear) {
-		return true;
-	}
-
-	return false;
-}
-
-function validateCpf(cpf: string) {
-	return cpf.length === 14;
-}
-
-function validateCep(cep: string) {
-	return cep.length === 9;
-}
-
-function validateCardNumber(cardNumber: string) {
-	return cardNumber.length === 19;
-}
-function validatePhone(phone: string) {
-	return phone.length === 15;
 }
 </script>

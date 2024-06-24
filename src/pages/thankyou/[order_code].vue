@@ -58,7 +58,6 @@ const { order_code } = route.params;
 const order = ref<OrderCreated | null>(null);
 onMounted(() => {
 	getOrder();
-	console.log(order);
 });
 
 async function getOrder() {

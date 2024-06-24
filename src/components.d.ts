@@ -9,9 +9,14 @@ declare module 'vue' {
 	export interface GlobalComponents {
 		Alert: (typeof import('./components/Alert.vue'))['default'];
 		AppFooter: (typeof import('./components/AppFooter.vue'))['default'];
+		DeliveryDataForm: (typeof import('./components/forms/DeliveryDataForm.vue'))['default'];
 		HelloWorld: (typeof import('./components/HelloWorld.vue'))['default'];
+		ImageSlider: (typeof import('./components/ImageSlider.vue'))['default'];
 		Loader: (typeof import('./components/Loader.vue'))['default'];
+		OfferCard: (typeof import('./components/offer/OfferCard.vue'))['default'];
 		OrderNotFound: (typeof import('./components/OrderNotFound.vue'))['default'];
+		PaymentDataForm: (typeof import('./components/forms/PaymentDataForm.vue'))['default'];
+		PersonalDataForm: (typeof import('./components/forms/PersonalDataForm.vue'))['default'];
 		QRCode: (typeof import('./components/QRCode.vue'))['default'];
 		RouterLink: (typeof import('vue-router'))['RouterLink'];
 		RouterView: (typeof import('vue-router'))['RouterView'];
