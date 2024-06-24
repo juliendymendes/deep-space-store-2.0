@@ -6,7 +6,7 @@
 
 			<h2 class="text-h5 mb-5">Pedido realizado com sucesso!</h2>
 
-			<p class="mb-2 text-medium-emphasis text-subtitle-1">Total: R$ {{ order?.offer.price }}</p>
+			<p class="mb-2 text-medium-emphasis text-subtitle-1">Total: {{ formatPrice(order.offer.price) }}</p>
 			<p v-if="order?.paymentType === 'credito'" class="mb-4 text-medium-emphasis text-h6">
 				{{ order?.paymentStatus }}
 			</p>
@@ -21,7 +21,9 @@
 				<p class="mb-4 text-medium-emphasis text-subtitle-2">Informações do pedido</p>
 				<p class="mb-4 text-medium-emphasis text-body-2"><strong>Item:</strong> {{ order?.offer.name }}</p>
 
-				<p class="mb-4 text-medium-emphasis text-body-2"><strong>Valor: </strong>R$ {{ order?.offer.price }}</p>
+				<p class="mb-4 text-medium-emphasis text-body-2">
+					<strong>Valor: </strong>{{ formatPrice(order.offer.price) }}
+				</p>
 				<p class="mb-4 text-medium-emphasis text-body-2"><strong>Itens:</strong></p>
 				<ul class="mb-4 ms-4 text-medium-emphasis text-body-2">
 					<li v-for="item in order?.offer.itens" :key="item">{{ item }}</li>
@@ -47,6 +49,7 @@
 <script lang="ts" setup>
 import { useAppStore } from '@/stores/app';
 import OrderCreated from '@/types/OrderCreated';
+import { formatPrice } from '@/utils/formatters';
 import { onMounted } from 'vue';
 const route = useRoute();
 const appStore = useAppStore();
@@ -57,6 +60,7 @@ onMounted(() => {
 	getOrder();
 	console.log(order);
 });
+
 async function getOrder() {
 	appStore.loaderState = true;
 	const response = await fetch(`/orders/${order_code}`, {

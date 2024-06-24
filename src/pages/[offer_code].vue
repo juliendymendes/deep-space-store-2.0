@@ -10,7 +10,7 @@
 						</v-carousel-item>
 					</v-carousel>
 					<v-card-title class="text-h5 mt-5">{{ offer?.name }}</v-card-title>
-					<v-card-subtitle>R$ {{ offer?.price.toLocaleString() }}</v-card-subtitle>
+					<v-card-subtitle>{{ formatPrice(offer?.price!) }}</v-card-subtitle>
 					<v-card-text>
 						<p class="text-subtitle-1">Este item também acompanha:</p>
 						<v-list :items="offer?.itens">
@@ -171,6 +171,7 @@ import Offer from '@/types/Offer';
 
 import { useAppStore } from '@/stores/app';
 import { useAlertStore } from '@/stores/alertStore';
+import { formatPrice } from '@/utils/formatters';
 const stepper = ref(0);
 const appStore = useAppStore();
 const alertStore = useAlertStore();
