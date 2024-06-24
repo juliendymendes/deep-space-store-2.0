@@ -7,8 +7,10 @@ export {}
 
 declare module 'vue' {
 	export interface GlobalComponents {
+		Alert: (typeof import('./components/Alert.vue'))['default'];
 		AppFooter: (typeof import('./components/AppFooter.vue'))['default'];
 		HelloWorld: (typeof import('./components/HelloWorld.vue'))['default'];
+		Loader: (typeof import('./components/Loader.vue'))['default'];
 		OrderNotFound: (typeof import('./components/OrderNotFound.vue'))['default'];
 		QRCode: (typeof import('./components/QRCode.vue'))['default'];
 		RouterLink: (typeof import('vue-router'))['RouterLink'];

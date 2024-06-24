@@ -45,9 +45,11 @@
 </template>
 
 <script lang="ts" setup>
+import { useAppStore } from '@/stores/app';
 import OrderCreated from '@/types/OrderCreated';
 import { onMounted } from 'vue';
 const route = useRoute();
+const appStore = useAppStore();
 // @ts-ignore
 const { order_code } = route.params;
 const order = ref<OrderCreated | null>(null);
@@ -56,6 +58,7 @@ onMounted(() => {
 	console.log(order);
 });
 async function getOrder() {
+	appStore.loaderState = true;
 	const response = await fetch(`/orders/${order_code}`, {
 		method: 'GET',
 	});
@@ -65,5 +68,6 @@ async function getOrder() {
 	} else {
 		console.error(response);
 	}
+	appStore.loaderState = false;
 }
 </script>

@@ -168,7 +168,12 @@ import PersonalData from '@/types/PersonalData';
 import { ref } from 'vue';
 import { vMaska } from 'maska/vue';
 import Offer from '@/types/Offer';
+
+import { useAppStore } from '@/stores/app';
+import { useAlertStore } from '@/stores/alertStore';
 const stepper = ref(0);
+const appStore = useAppStore();
+const alertStore = useAlertStore();
 const route = useRoute();
 const router = useRouter();
 const offer = ref<Offer | null>(null);
@@ -248,6 +253,7 @@ const paymentOptions = computed(() => {
 });
 // FUNCTIONS
 async function getOffer() {
+	appStore.loaderState = true;
 	const response = await fetch(`/offers/${offer_code}`, {
 		method: 'GET',
 	});
@@ -255,8 +261,16 @@ async function getOffer() {
 		const data = await response.json();
 		offer.value = data;
 	} else {
+		alertStore.showAlert({
+			icon: 'mdi-alert-circle',
+			title: 'Erro',
+			text: response.statusText,
+			visible: true,
+			type: 'error',
+		});
 		console.error(response);
 	}
+	appStore.loaderState = false;
 }
 
 async function finalizeOrder() {
@@ -276,9 +290,23 @@ async function finalizeOrder() {
 			const order = await response.json();
 			router.push(`/thankyou/${order.orderCode}`);
 		} else {
+			alertStore.showAlert({
+				icon: 'mdi-alert-circle',
+				title: 'Erro',
+				text: response.statusText,
+				visible: true,
+				type: 'error',
+			});
 			console.error(response);
 		}
 	} else {
+		alertStore.showAlert({
+			icon: 'mdi-alert',
+			title: 'Dados inválidos',
+			text: 'Preencha todos os campos',
+			visible: true,
+			type: 'warning',
+		});
 		console.log('dados inválidos');
 	}
 }
