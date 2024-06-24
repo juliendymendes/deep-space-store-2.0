@@ -4,16 +4,21 @@
 		<v-row class="mb-5">
 			<v-col cols="12" md="6">
 				<v-card>
-					<v-sheet class="mx-auto" elevation="8" max-width="700" max-height="700">
+					<v-sheet class="mx-auto w-100" elevation="8" max-width="700">
 						<v-expand-transition>
-							<v-img v-if="currentImage != null" :src="offer?.imagesPaths[currentImage]" class="w-100"></v-img>
+							<v-img
+								v-if="currentImage != null"
+								:src="offer?.imagesPaths[currentImage]"
+								cover
+								max-width="700"
+								max-height="500"></v-img>
 						</v-expand-transition>
 						<v-slide-group v-model="currentImage" class="pa-4" selected-class="bg-primary" show-arrows>
 							<v-slide-group-item
 								v-for="i in offer?.imagesPaths"
 								:key="i"
 								v-slot="{ isSelected, toggle, selectedClass }">
-								<v-img :src="i" :class="['ma-4', selectedClass]" cover @click="toggle">
+								<v-img :src="i" :class="['ma-4', selectedClass]" cover @click="toggle" max-width="150">
 									<div class="d-flex fill-height align-center justify-center">
 										<v-scale-transition>
 											<v-icon v-if="isSelected" color="white" icon="mdi-close-circle-outline" size="48"></v-icon>
