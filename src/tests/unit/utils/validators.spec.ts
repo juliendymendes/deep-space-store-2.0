@@ -18,7 +18,7 @@ describe('validatePhone', () => {
 	it('should return false because it has more than 15 caracteres', () => {
 		expect(validatePhone('(67) 99236-87444')).toBeFalsy();
 	});
-	// falso positivo
+
 	it('should return false because value is an empty string', () => {
 		expect(validatePhone('')).toBeFalsy();
 	});
@@ -38,7 +38,7 @@ describe('validateCep', () => {
 	it('should return false because it has more than 9 caracteres', () => {
 		expect(validateCep('79018-3213')).toBeFalsy();
 	});
-	// falso positivo
+
 	it('should return false because value is an empty string', () => {
 		expect(validateCep('')).toBeFalsy();
 	});
@@ -58,7 +58,7 @@ describe('validateCpf', () => {
 	it('should return false because it has more than 14 caracteres', () => {
 		expect(validateCpf('321.432.342-234')).toBeFalsy();
 	});
-	// falso positivo
+
 	it('should return false because value is an empty string', () => {
 		expect(validateCpf('')).toBeFalsy();
 	});
@@ -78,7 +78,7 @@ describe('validateCardNumber', () => {
 	it('should return false because it has more than 19 caracteres', () => {
 		expect(validateCardNumber('3214.4324.3424.43453')).toBeFalsy();
 	});
-	// falso positivo
+
 	it('should return false because value is an empty string', () => {
 		expect(validateCardNumber('')).toBeFalsy();
 	});
@@ -108,7 +108,7 @@ describe('validateCardExpirationDate', () => {
 	it('should return false because date is a empty string', () => {
 		expect(validateCardExpirationDate('')).toBeFalsy();
 	});
-	// falso positivo
+
 	it('should return false because date format is invalid', () => {
 		expect(validateCardExpirationDate('12/ab')).toBeFalsy();
 	});
