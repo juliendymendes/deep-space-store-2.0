@@ -9,10 +9,11 @@
 				rounded="lg"
 				max-width="300"
 				@click="$router.push(`/${offer.code}`)">
-				<v-img class="align-end text-white" rounded="lg" height="200" :src="offer.imagesPaths[0]" cover> </v-img>
+				<v-img class="align-end text-white" rounded="lg" height="300" :src="offer.imagesPaths[0]" contain> </v-img>
 				<v-card-title>{{ offer.name }}</v-card-title>
 
 				<v-card-subtitle class="pt-4"> {{ formatPrice(offer.price) }} </v-card-subtitle>
+				<v-rating v-model="rating" readonly color="yellow-darken-3"></v-rating>
 			</v-card>
 		</template>
 	</v-hover>
@@ -21,6 +22,7 @@
 <script lang="ts" setup>
 import Offer from '@/types/Offer';
 import { formatPrice } from '@/utils/formatters';
+const rating = ref(4);
 defineProps<{
 	offer: Offer;
 }>();

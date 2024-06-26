@@ -5,29 +5,12 @@ import { http, HttpResponse } from 'msw';
 
 const allOffers: Offer[] = [
 	{
-		code: 'KITGAMER20',
-		name: 'Kit Gamer Completo com Teclado, Mouse, Mousepad e Headset',
-		price: 499.9,
-		itens: [
-			'Teclado Gamer Mecânico RGB',
-			'Mouse Gamer com 6 botões',
-			'Mousepad Gamer XXL',
-			'Headset Gamer com Microfone',
-		],
-		paymentOptions: ['pix', 'credito', 'boleto'],
-		imagesPaths: [
-			'https://images.unsplash.com/photo-1626155399627-86488538895d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-			'https://images.unsplash.com/photo-1629429408209-1f912961dbd8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-			'https://images.unsplash.com/photo-1600186279172-fdbaefd74383?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-		],
-	},
-	{
 		code: 'SMART101',
 		name: 'Smartwatch Galaxy Watch5 Pro 45mm Bluetooth - Preto',
 		price: 1999,
 		paymentOptions: ['pix', 'credito', 'boleto'],
 		itens: [
-			' Smartwatch Galaxy Watch5 Pro 45mm Bluetooth - Preto',
+			'Smartwatch Galaxy Watch5 Pro 45mm Bluetooth - Preto',
 			'Cabo de carregamento magnético',
 			'Manual do usuário',
 			'Certificado de garantia',
@@ -38,13 +21,47 @@ const allOffers: Offer[] = [
 			'https://samsungbrshop.vtexassets.com/arquivos/ids/200626-800-auto?v=638053310852970000&width=800&height=auto&aspect=true',
 		],
 	},
+	{
+		code: 'PRO123',
+		name: 'Smartphone Galaxy S23 Ultra 5G 12GB/512GB',
+		price: 5999,
+		paymentOptions: ['pix', 'credito', 'boleto'],
+		itens: ['Cabo de carregamento', 'Manual do usuário', 'Certificado de garantia'],
+		imagesPaths: [
+			'https://samsungbrshop.vtexassets.com/arquivos/ids/219667-600-auto?v=638514816133800000&width=600&height=auto&aspect=true',
+			'https://samsungbrshop.vtexassets.com/arquivos/ids/219671-600-auto?v=638514816211870000&width=600&height=auto&aspect=true',
+		],
+	},
+	{
+		code: 'NOTE234',
+		name: 'Notebook Gamer Acer Nitro 5 i5-12500H 8GB/512GB GTX 1650',
+		price: 4999,
+		paymentOptions: ['pix', 'credito', 'boleto'],
+		itens: ['Cabo de carregamento', 'Manual do usuário', 'Certificado de garantia'],
+		imagesPaths: [
+			'https://fujiokadistribuidor.vteximg.com.br/arquivos/ids/214619',
+			'https://fujiokadistribuidor.vteximg.com.br/arquivos/ids/214573',
+			'https://fujiokadistribuidor.vteximg.com.br/arquivos/ids/214595',
+		],
+	},
+	{
+		code: 'TV345',
+		name: 'Smart TV LG 55UQ7500 4K UHD',
+		price: 2999,
+		paymentOptions: ['pix', 'credito', 'boleto'],
+		itens: ['Manual do usuário', 'Certificado de garantia'],
+		imagesPaths: [
+			'https://a-static.mlcdn.com.br/1500x1500/smart-tv-55-4k-led-lg-55uq8050-ai-processor-wi-fi-bluetooth-hdr-alexa-google-assistente-3-hdmi/magazineluiza/235289100/26b1e287394afb128b066623960168b0.jpg',
+			'https://a-static.mlcdn.com.br/1500x1500/smart-tv-55-4k-led-lg-55uq8050-ai-processor-wi-fi-bluetooth-hdr-alexa-google-assistente-3-hdmi/magazineluiza/235289100/5ef8c1fcbe4b2dc258522aba2b938423.jpg',
+		],
+	},
 ];
 
 const allOrders = new Map<string, OrderRequest>();
 
 export const handlers = [
 	// Return an offer by code
-	http.get(process.env.VITE_API_URL + '/offers/:offerCode', ({ params }) => {
+	http.get('/offers/:offerCode', ({ params }) => {
 		const { offerCode } = params;
 
 		const offer = allOffers.find((offer) => offer.code === offerCode.toString());
@@ -63,8 +80,13 @@ export const handlers = [
 		return HttpResponse.json(allOffers);
 	}),
 
+	// Return new product
+	http.get('/newProduct', () => {
+		return HttpResponse.json(allOffers[1]);
+	}),
+
 	// Create an order
-	http.post(process.env.VITE_API_URL + '/offers/:offerCode/create_order', async ({ request, params }) => {
+	http.post('/offers/:offerCode/create_order', async ({ request, params }) => {
 		const newOrder = (await request.json()) as OrderRequest;
 		if (newOrder.cpf === '00000000000' || newOrder.cpf === '000.000.000-00') {
 			return HttpResponse.json(null, { status: 400, statusText: 'CPF incorreto. Por favor, tente novamente.' });
