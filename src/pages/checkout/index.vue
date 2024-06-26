@@ -3,7 +3,7 @@
 	<v-container class="mt-15">
 		<v-row class="mb-5">
 			<v-col cols="12" md="6">
-				<OfferCard :offer="offer" />
+				<OfferInfo :offer="offer" />
 			</v-col>
 
 			<v-col cols="12" md="6">
@@ -51,7 +51,7 @@ import Offer from '@/types/Offer';
 
 import { useAppStore } from '@/stores/app';
 import { useAlertStore } from '@/stores/alertStore';
-import OfferCard from '@/components/offer/OfferCard.vue';
+import OfferInfo from '@/components/offer/OfferInfo.vue';
 
 import PersonalDataForm from '@/components/forms/PersonalDataForm.vue';
 import { useOrderStore } from '@/stores/orderStore';

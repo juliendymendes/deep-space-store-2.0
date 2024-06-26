@@ -12,6 +12,7 @@ declare module 'vue' {
     ImageSlider: typeof import('./components/ImageSlider.vue')['default']
     Loader: typeof import('./components/Loader.vue')['default']
     OfferCard: typeof import('./components/offer/OfferCard.vue')['default']
+    OfferInfo: typeof import('./components/offer/OfferInfo.vue')['default']
     OrderNotFound: typeof import('./components/OrderNotFound.vue')['default']
     PaymentDataForm: typeof import('./components/forms/PaymentDataForm.vue')['default']
     PersonalDataForm: typeof import('./components/forms/PersonalDataForm.vue')['default']

@@ -1,54 +1,27 @@
 <template>
-	<v-card>
-		<ImageSlider :images="offer?.imagesPaths" />
+	<v-hover>
+		<template v-slot:default="{ isHovering, props }">
+			<v-card
+				v-bind="props"
+				:class="isHovering ? 'elevation-24' : 'elevation-0'"
+				class="mx-auto pa-3 cursor-pointer"
+				color="transparent"
+				rounded="lg"
+				max-width="300"
+				@click="$router.push(`/${offer.code}`)">
+				<v-img class="align-end text-white" rounded="lg" height="200" :src="offer.imagesPaths[0]" cover> </v-img>
+				<v-card-title>{{ offer.name }}</v-card-title>
 
-		<div class="px-5 pb-3">
-			<v-card-title class="text-h5 mt-5">{{ offer.name }}</v-card-title>
-			<v-card-subtitle>{{ formatPrice(offer.price) }}</v-card-subtitle>
-			<v-card-text>
-				<p class="text-subtitle-1">Este item também acompanha:</p>
-				<v-list :items="offer.itens">
-					<template v-slot:prepend>
-						<v-icon icon="mdi mdi-circle-small"></v-icon>
-					</template>
-				</v-list>
-			</v-card-text>
-			<div class="ma-4 mt-0">
-				<p class="text-subtitle-1 mb-4">Formas de pagamento</p>
-				<v-chip color="primary me-3" v-for="item in paymentOptions" :key="item">
-					{{ item }}
-				</v-chip>
-			</div>
-		</div>
-	</v-card>
+				<v-card-subtitle class="pt-4"> {{ formatPrice(offer.price) }} </v-card-subtitle>
+			</v-card>
+		</template>
+	</v-hover>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import Offer from '@/types/Offer';
 import { formatPrice } from '@/utils/formatters';
-import ImageSlider from '../ImageSlider.vue';
-
-const props = defineProps<{
+defineProps<{
 	offer: Offer;
 }>();
-
-const paymentOptions = computed(() => {
-	const options: string[] = [];
-	props.offer.paymentOptions.map((opt) => {
-		switch (opt) {
-			case 'boleto':
-				options.push('Boleto');
-				break;
-			case 'credito':
-				options.push('Cartão de crédito');
-				break;
-			case 'pix':
-				options.push('PIX');
-				break;
-		}
-		return true;
-	});
-
-	return options;
-});
 </script>
