@@ -10,13 +10,13 @@
 			<v-row>
 				<v-col cols="12" sm="6" class="d-flex flex-column flex-wrap justify-center">
 					<p class="text-subtitle-1 my-2">Novidades em smartphones</p>
-					<p class="text-h4 font-weight-medium my-2">Confira o novo {{ newProduct?.name }}</p>
+					<p class="text-h4 font-weight-medium my-2">Confira o novo {{ newProduct?.product.name }}</p>
 
 					<p class="text-h6 my-2">Não perca, compre agora!</p>
-					<v-btn color="primary" rounded="lg" max-width="300" :to="`/${newProduct?.code}`">Comprar agora</v-btn>
+					<v-btn color="primary" rounded="lg" max-width="300" :to="`/${newProduct?.offer_code}`">Comprar agora</v-btn>
 				</v-col>
 				<v-col cols="12" sm="6" class="d-flex justify-center">
-					<v-img :src="newProduct?.imagesPaths[0]" max-width="500"></v-img>
+					<v-img :src="newProduct?.product.imagesPaths[0]" max-width="500"></v-img>
 				</v-col>
 			</v-row>
 		</div>
@@ -34,16 +34,19 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { Offer, Product } from '@/types/Offer';
+import { Offer } from '@/types/Offer';
 import OfferCard from '@/components/offer/OfferCard.vue';
 const offers = ref<Offer[]>();
-const newProduct = ref<Product>({
-	code: '',
-	name: '',
-	price: 0,
-	imagesPaths: [],
-	paymentOptions: [],
-	itens: [],
+const newProduct = ref({
+	offer_code: '',
+	product: {
+		code: '',
+		name: '',
+		price: 0,
+		imagesPaths: [],
+		paymentOptions: [],
+		itens: [],
+	},
 });
 const categories = ref([
 	{

@@ -98,7 +98,7 @@ export const handlers = [
 
 	// Return new product
 	http.get('/newProduct', () => {
-		return HttpResponse.json(allOffers[1].product);
+		return HttpResponse.json({ offer_code: allOffers[1].code, product: allOffers[1].product });
 	}),
 
 	// Create an order
