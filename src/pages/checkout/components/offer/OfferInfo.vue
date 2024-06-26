@@ -1,13 +1,16 @@
 <template>
 	<v-card>
-		<ImageSlider :images="offer?.imagesPaths" />
+		<ImageSlider :images="offer?.product.imagesPaths" />
 
 		<div class="px-5 pb-3">
-			<v-card-title class="text-h5 mt-5">{{ offer.name }}</v-card-title>
-			<v-card-subtitle>{{ formatPrice(offer.price) }}</v-card-subtitle>
+			<v-card-title class="text-h5 mt-5">{{ offer.product.name }}</v-card-title>
+			<v-card-subtitle>
+				<span class="text-decoration-line-through">De {{ formatPrice(offer.product.price) }}</span>
+				<span> por {{ formatPrice(offer.price) }}</span>
+			</v-card-subtitle>
 			<v-card-text>
 				<p class="text-subtitle-1">Este item também acompanha:</p>
-				<v-list :items="offer.itens">
+				<v-list :items="offer.product.itens">
 					<template v-slot:prepend>
 						<v-icon icon="mdi mdi-circle-small"></v-icon>
 					</template>
@@ -24,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import Offer from '@/types/Offer';
+import { Offer } from '@/types/Offer';
 import { formatPrice } from '@/utils/formatters';
 import ImageSlider from '@/components/ImageSlider.vue';
 import { computed } from 'vue';
@@ -35,7 +38,7 @@ const props = defineProps<{
 
 const paymentOptions = computed(() => {
 	const options: string[] = [];
-	props.offer.paymentOptions.map((opt) => {
+	props.offer.product.paymentOptions.map((opt) => {
 		switch (opt) {
 			case 'boleto':
 				options.push('Boleto');

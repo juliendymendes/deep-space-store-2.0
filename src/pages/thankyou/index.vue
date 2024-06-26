@@ -23,14 +23,14 @@
 
 			<div class="text-start mt-5 ms-sm-11">
 				<p class="mb-4 text-medium-emphasis text-subtitle-2">Informações do pedido</p>
-				<p class="mb-4 text-medium-emphasis text-body-2"><strong>Item:</strong> {{ order?.offer.name }}</p>
+				<p class="mb-4 text-medium-emphasis text-body-2"><strong>Item:</strong> {{ order?.offer.product.name }}</p>
 
 				<p class="mb-4 text-medium-emphasis text-body-2">
 					<strong>Valor: </strong>{{ formatPrice(order.offer.price) }}
 				</p>
 				<p class="mb-4 text-medium-emphasis text-body-2"><strong>Itens:</strong></p>
 				<ul class="mb-4 ms-4 text-medium-emphasis text-body-2">
-					<li v-for="item in order?.offer.itens" :key="item">{{ item }}</li>
+					<li v-for="item in order?.offer.product.itens" :key="item">{{ item }}</li>
 				</ul>
 			</div>
 
