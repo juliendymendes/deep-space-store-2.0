@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 // Plugins
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
@@ -64,5 +65,14 @@ export default defineConfig({
 	},
 	server: {
 		port: 3000,
+	},
+	test: {
+		globals: true,
+		environment: 'jsdom',
+		server: {
+			deps: {
+				inline: ['vuetify'],
+			},
+		},
 	},
 });
