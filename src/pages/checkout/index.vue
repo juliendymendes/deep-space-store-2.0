@@ -1,6 +1,7 @@
 <!-- eslint-disable vue/valid-v-slot -->
 <template>
 	<v-container class="mt-15">
+		<!-- <OfferNotFound v-if="!offer" /> -->
 		<v-row class="mb-5">
 			<v-col cols="12" md="6">
 				<OfferInfo :offer="offer" />
@@ -51,11 +52,14 @@ import Offer from '@/types/Offer';
 
 import { useAppStore } from '@/stores/app';
 import { useAlertStore } from '@/stores/alertStore';
-import OfferInfo from '@/components/offer/OfferInfo.vue';
-
-import PersonalDataForm from '@/components/forms/PersonalDataForm.vue';
+import OfferInfo from './components/offer/OfferInfo.vue';
+import PaymentDataForm from './components/forms/PaymentDataForm.vue';
+import PersonalDataForm from './components/forms/PersonalDataForm.vue';
 import { useOrderStore } from '@/stores/orderStore';
-import DeliveryDataForm from '@/components/forms/DeliveryDataForm.vue';
+import DeliveryDataForm from './components/forms/DeliveryDataForm.vue';
+import { OfferService } from '@/services/offer';
+import { CheckoutService } from '@/services/checkout';
+import { Order } from '@/types/Order';
 
 const stepper = ref(0);
 const appStore = useAppStore();
@@ -90,20 +94,13 @@ onMounted(() => {
 // FUNCTIONS
 async function getOffer() {
 	appStore.loaderState = true;
-	const response = await fetch(`/offers/${offer_code}`, {
-		method: 'GET',
-	});
-	if (response.ok) {
-		const data = await response.json();
-		offer.value = data;
+	const response = await OfferService.getOfferByCode(offer_code);
+	console.log(response);
+
+	if (response instanceof Error) {
+		console.log(response.message);
 	} else {
-		alertStore.showAlert({
-			icon: 'mdi-alert-circle',
-			title: 'Erro',
-			text: response.statusText,
-			visible: true,
-			type: 'error',
-		});
+		offer.value = response;
 		console.error(response);
 	}
 	appStore.loaderState = false;
@@ -112,29 +109,25 @@ async function getOffer() {
 async function finalizeOrder() {
 	const isFormValid = await validateForms();
 	if (isFormValid) {
-		const bodyContent = {
-			...orderStore.personalData,
-			...orderStore.deliveryData,
-			...orderStore.paymentData,
+		const bodyContent: Order = {
+			clientData: orderStore.personalData,
+			deliveryData: orderStore.deliveryData,
+			paymentData: orderStore.paymentData,
 		};
-		const response = await fetch(`/offers/${offer_code}/create_order`, {
-			method: 'POST',
-			body: JSON.stringify(bodyContent),
-		});
+		const response = await CheckoutService.createOrder(offer_code, bodyContent);
 
-		if (response.ok) {
-			orderStore.clearForms();
-			const order = await response.json();
-			router.push(`/thankyou/${order.orderCode}`);
-		} else {
+		if (response instanceof Error) {
 			alertStore.showAlert({
 				icon: 'mdi-alert-circle',
 				title: 'Erro',
-				text: response.statusText,
+				text: response.message,
 				visible: true,
 				type: 'error',
 			});
-			console.error(response);
+		} else {
+			orderStore.clearForms();
+			const order = response;
+			router.push(`/thankyou/${order.orderCode}`);
 		}
 	} else {
 		alertStore.showAlert({
@@ -144,14 +137,11 @@ async function finalizeOrder() {
 			visible: true,
 			type: 'warning',
 		});
-		console.log('dados inválidos');
 	}
 }
 
 // Valida o formulário antes de passar para o próximo
 async function next() {
-	console.log(personalDataForm.value);
-
 	switch (stepper.value) {
 		case 0: {
 			const result = await personalDataForm.value?.validate();

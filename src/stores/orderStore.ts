@@ -32,8 +32,6 @@ export const useOrderStore = defineStore('order', {
 	}),
 	actions: {
 		clearForms() {
-			console.log('a');
-
 			personalData = {
 				name: '',
 				email: '',

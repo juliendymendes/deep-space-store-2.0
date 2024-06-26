@@ -7,14 +7,18 @@
 			<h2 class="text-h5 mb-5">Pedido realizado com sucesso!</h2>
 
 			<p class="mb-2 text-medium-emphasis text-subtitle-1">Total: {{ formatPrice(order.offer.price) }}</p>
-			<p v-if="order?.paymentType === 'credito'" class="mb-4 text-medium-emphasis text-h6">
+			<p v-if="order?.paymentData.paymentType === 'credito'" class="mb-4 text-medium-emphasis text-h6">
 				{{ order?.paymentStatus }}
 			</p>
 			<div v-else>
 				<p class="mb-4 text-medium-emphasis text-h6">Escaneie o código abaixo para finalizar o pagamento</p>
-				<QRCode :width="280" v-if="order?.paymentType === 'pix'" :data="order?.orderCode || ''" />
+				<QRCode :width="280" v-if="order?.paymentData.paymentType === 'pix'" :data="order?.orderCode || ''" />
 
-				<v-img v-if="order?.paymentType === 'boleto'" max-width="500" class="mx-auto" src="/barcode.png"></v-img>
+				<v-img
+					v-if="order?.paymentData.paymentType === 'boleto'"
+					max-width="500"
+					class="mx-auto"
+					src="/barcode.png"></v-img>
 			</div>
 
 			<div class="text-start mt-5 ms-sm-11">
@@ -33,7 +37,8 @@
 			<div class="text-start mt-5 ms-sm-11">
 				<p class="mb-4 text-medium-emphasis text-subtitle-2">Informações para entrega</p>
 				<p class="mb-4 text-medium-emphasis text-body-2">
-					{{ order?.logradouro }}, {{ order?.numero }} - {{ order?.cep }}, {{ order?.localidade }}, {{ order?.uf }}
+					{{ order?.deliveryData.logradouro }}, {{ order?.deliveryData.numero }} - {{ order?.deliveryData.cep }},
+					{{ order?.deliveryData.localidade }}, {{ order?.deliveryData.uf }}
 				</p>
 			</div>
 
@@ -48,9 +53,11 @@
 
 <script lang="ts" setup>
 import { useAppStore } from '@/stores/app';
-import OrderCreated from '@/types/OrderCreated';
+import { OrderCreated } from '@/types/Order';
 import { formatPrice } from '@/utils/formatters';
 import { onMounted } from 'vue';
+import OrderNotFound from './components/OrderNotFound.vue';
+import { CheckoutService } from '@/services/checkout';
 const route = useRoute();
 const appStore = useAppStore();
 // @ts-ignore
@@ -61,15 +68,11 @@ onMounted(() => {
 });
 
 async function getOrder() {
-	appStore.loaderState = true;
-	const response = await fetch(`/orders/${order_code}`, {
-		method: 'GET',
-	});
-	if (response.ok) {
-		const data = await response.json();
-		order.value = data;
+	const response = await CheckoutService.getOrderByCode(order_code);
+	if (response instanceof Error) {
+		console.error(response.message);
 	} else {
-		console.error(response);
+		order.value = response;
 	}
 	appStore.loaderState = false;
 }
