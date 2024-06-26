@@ -1,5 +1,5 @@
 import Offer from '@/types/Offer';
-import OrderRequest from '@/types/OrderCreated';
+import { OrderCreated } from '@/types/Order';
 
 import { http, HttpResponse } from 'msw';
 
@@ -57,7 +57,7 @@ const allOffers: Offer[] = [
 	},
 ];
 
-const allOrders = new Map<string, OrderRequest>();
+const allOrders = new Map<string, OrderCreated>();
 
 export const handlers = [
 	// Return an offer by code
@@ -87,8 +87,8 @@ export const handlers = [
 
 	// Create an order
 	http.post('/offers/:offerCode/create_order', async ({ request, params }) => {
-		const newOrder = (await request.json()) as OrderRequest;
-		if (newOrder.cpf === '00000000000' || newOrder.cpf === '000.000.000-00') {
+		const newOrder = (await request.json()) as OrderCreated;
+		if (newOrder.paymentData.cpf === '00000000000' || newOrder.paymentData.cpf === '000.000.000-00') {
 			return HttpResponse.json(null, { status: 400, statusText: 'CPF incorreto. Por favor, tente novamente.' });
 		}
 
@@ -98,7 +98,7 @@ export const handlers = [
 		const offer = allOffers.find((offer) => offer.code === offerCode);
 		newOrder.offer = offer!;
 
-		switch (newOrder.paymentType) {
+		switch (newOrder.paymentData.paymentType) {
 			case 'pix':
 				newOrder.paymentCodePath = '/qr_code.jpg';
 				break;

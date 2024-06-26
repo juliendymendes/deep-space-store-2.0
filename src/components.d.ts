@@ -7,11 +7,12 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    Alert: typeof import('./components/Alert.vue')['default']
+    Alert: typeof import('./components/ui/Alert.vue')['default']
     AppBar: typeof import('./components/layout/AppBar.vue')['default']
     DeliveryDataForm: typeof import('./components/forms/DeliveryDataForm.vue')['default']
     ImageSlider: typeof import('./components/ImageSlider.vue')['default']
-    Loader: typeof import('./components/Loader.vue')['default']
+    Loader: typeof import('./components/ui/Loader.vue')['default']
+    NotFound: typeof import('./components/ui/NotFound.vue')['default']
     OfferCard: typeof import('./components/offer/OfferCard.vue')['default']
     OfferInfo: typeof import('./components/offer/OfferInfo.vue')['default']
     OrderNotFound: typeof import('./components/OrderNotFound.vue')['default']

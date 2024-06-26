@@ -26,7 +26,8 @@
 <script setup lang="ts">
 import Offer from '@/types/Offer';
 import { formatPrice } from '@/utils/formatters';
-import ImageSlider from '../ImageSlider.vue';
+import ImageSlider from '@/components/ImageSlider.vue';
+import { computed } from 'vue';
 
 const props = defineProps<{
 	offer: Offer;
