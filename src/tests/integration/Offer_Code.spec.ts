@@ -6,7 +6,7 @@ import { expect, it, vi, beforeAll, afterAll, afterEach, describe } from 'vitest
 import { createVuetify } from 'vuetify';
 import { createTestingPinia } from '@pinia/testing';
 
-import Offer_code from '@/pages/[offer_code].vue';
+import Checkout from '@/pages/checkout/index.vue';
 import { handlers } from '@/mocks/handlers';
 import { setupServer } from 'msw/node';
 import { useOrderStore } from '@/stores/orderStore';
@@ -55,7 +55,7 @@ describe('[offer_code].vue', () => {
 		// Implement useRoute mocks
 		useRoute.mockImplementationOnce(() => ({
 			params: {
-				offer_code: 'KITGAMER20',
+				offer_code: 'SMART101',
 			},
 		}));
 
@@ -65,7 +65,7 @@ describe('[offer_code].vue', () => {
 			push,
 		}));
 		// Mount component
-		const wrapper = mount(Offer_code, {
+		const wrapper = mount(Checkout, {
 			components: { OfferCard, PersonalDataForm, DeliveryDataForm, PaymentDataForm },
 			global: {
 				plugins: [vuetify, createTestingPinia()],

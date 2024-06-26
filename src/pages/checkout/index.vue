@@ -90,7 +90,7 @@ onMounted(() => {
 // FUNCTIONS
 async function getOffer() {
 	appStore.loaderState = true;
-	const response = await fetch(process.env.VITE_API_URL + `/offers/${offer_code}`, {
+	const response = await fetch(`/offers/${offer_code}`, {
 		method: 'GET',
 	});
 	if (response.ok) {
@@ -117,7 +117,7 @@ async function finalizeOrder() {
 			...orderStore.deliveryData,
 			...orderStore.paymentData,
 		};
-		const response = await fetch(process.env.VITE_API_URL + `/offers/${offer_code}/create_order`, {
+		const response = await fetch(`/offers/${offer_code}/create_order`, {
 			method: 'POST',
 			body: JSON.stringify(bodyContent),
 		});
