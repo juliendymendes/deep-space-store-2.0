@@ -3,6 +3,7 @@
 		<v-main>
 			<Alert />
 			<Loader />
+			<AppBar />
 
 			<router-view />
 		</v-main>
@@ -12,5 +13,6 @@
 <script lang="ts" setup>
 import Loader from './components/Loader.vue';
 import Alert from './components/Alert.vue';
+import AppBar from './components/layout/AppBar.vue';
 //
 </script>
