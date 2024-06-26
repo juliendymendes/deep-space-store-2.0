@@ -50,7 +50,7 @@ const allOrders = new Map<string, OrderRequest>();
 
 export const handlers = [
 	// Return an offer by code
-	http.get('/offers/:offerCode', ({ params }) => {
+	http.get(process.env.VITE_API_URL + '/offers/:offerCode', ({ params }) => {
 		const { offerCode } = params;
 
 		const offer = allOffers.get(offerCode.toString());
@@ -65,14 +65,14 @@ export const handlers = [
 	}),
 
 	// Create an order
-	http.post('/offers/:offerCode/create_order', async ({ request, params }) => {
+	http.post(process.env.VITE_API_URL + '/offers/:offerCode/create_order', async ({ request, params }) => {
 		const newOrder = (await request.json()) as OrderRequest;
 		if (newOrder.cpf === '00000000000' || newOrder.cpf === '000.000.000-00') {
 			return HttpResponse.json(null, { status: 400, statusText: 'CPF incorreto. Por favor, tente novamente.' });
 		}
 
 		const { offerCode } = params;
-		const id = self.crypto.randomUUID(); // TODO change for uuid when possible
+		const id = self.crypto.randomUUID();
 		newOrder.orderCode = id;
 		const offer = allOffers.get(offerCode.toString());
 		newOrder.offer = offer!;

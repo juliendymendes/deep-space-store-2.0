@@ -1,6 +1,7 @@
 <template>
 	<v-form ref="deliveryDataForm">
 		<v-text-field
+			id="cep"
 			v-maska="'#####-###'"
 			v-model="orderStore.deliveryData.cep"
 			:rules="[rules.required, rules.cep]"
@@ -9,29 +10,44 @@
 
 		<v-row>
 			<v-col cols="12" sm="8">
-				<v-text-field v-model="orderStore.deliveryData.logradouro" :rules="[rules.required]" label="Rua"></v-text-field>
+				<v-text-field
+					id="street"
+					v-model="orderStore.deliveryData.logradouro"
+					:rules="[rules.required]"
+					label="Rua"></v-text-field>
 			</v-col>
 			<v-col cols="12" sm="4">
-				<v-text-field v-model="orderStore.deliveryData.numero" :rules="[rules.required]" label="Número"></v-text-field>
+				<v-text-field
+					id="number"
+					type="number"
+					v-model="orderStore.deliveryData.numero"
+					:rules="[rules.required]"
+					label="Número"></v-text-field>
 			</v-col>
 		</v-row>
-		<v-text-field v-model="orderStore.deliveryData.bairro" :rules="[rules.required]" label="Bairro"></v-text-field>
+		<v-text-field
+			id="neighborhood"
+			v-model="orderStore.deliveryData.bairro"
+			:rules="[rules.required]"
+			label="Bairro"></v-text-field>
 		<v-row>
 			<v-col cols="12" sm="8">
 				<v-text-field
+					id="city"
 					v-model="orderStore.deliveryData.localidade"
 					:rules="[rules.required]"
 					label="Cidade"></v-text-field>
 			</v-col>
 			<v-col cols="12" sm="4">
 				<v-text-field
+					id="state"
 					v-model="orderStore.deliveryData.uf"
 					v-maska="'@@'"
 					:rules="[rules.required, rules.uf]"
 					label="UF"></v-text-field>
 			</v-col>
 		</v-row>
-		<v-text-field v-model="orderStore.deliveryData.complemento" label="Complemento"></v-text-field>
+		<v-text-field id="complement" v-model="orderStore.deliveryData.complemento" label="Complemento"></v-text-field>
 	</v-form>
 </template>
 

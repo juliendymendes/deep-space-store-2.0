@@ -1,13 +1,19 @@
 <template>
 	<v-form ref="personalDataForm">
-		<v-text-field v-model="orderStore.personalData.name" :rules="[rules.required]" label="Nome completo"></v-text-field>
+		<v-text-field
+			id="name"
+			v-model="orderStore.personalData.name"
+			:rules="[rules.required]"
+			label="Nome completo"></v-text-field>
 
 		<v-text-field
+			id="email"
 			type="email"
 			v-model="orderStore.personalData.email"
 			:rules="[rules.email]"
 			label="Email"></v-text-field>
 		<v-text-field
+			id="phone"
 			v-maska="'(##) #####-####'"
 			v-model="orderStore.personalData.phone"
 			:rules="[rules.required, rules.phone]"

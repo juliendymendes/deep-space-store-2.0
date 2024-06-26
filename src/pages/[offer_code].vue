@@ -32,7 +32,7 @@
 							<PaymentDataForm />
 							<v-row>
 								<v-col cols="12" class="d-flex justify-end">
-									<v-btn color="primary" @click="finalizeOrder">Finalizar pedido</v-btn>
+									<v-btn id="finalizeOrder" color="primary" @click="finalizeOrder">Finalizar pedido</v-btn>
 								</v-col>
 							</v-row>
 						</v-stepper-window-item>
@@ -90,7 +90,7 @@ onMounted(() => {
 // FUNCTIONS
 async function getOffer() {
 	appStore.loaderState = true;
-	const response = await fetch(`/offers/${offer_code}`, {
+	const response = await fetch(process.env.VITE_API_URL + `/offers/${offer_code}`, {
 		method: 'GET',
 	});
 	if (response.ok) {
@@ -117,7 +117,7 @@ async function finalizeOrder() {
 			...orderStore.deliveryData,
 			...orderStore.paymentData,
 		};
-		const response = await fetch(`/offers/${offer_code}/create_order`, {
+		const response = await fetch(process.env.VITE_API_URL + `/offers/${offer_code}/create_order`, {
 			method: 'POST',
 			body: JSON.stringify(bodyContent),
 		});
