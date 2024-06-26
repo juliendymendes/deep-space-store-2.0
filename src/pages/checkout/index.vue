@@ -1,7 +1,6 @@
 <!-- eslint-disable vue/valid-v-slot -->
 <template>
 	<v-container class="mt-15">
-		<!-- <OfferNotFound v-if="!offer" /> -->
 		<v-row class="mb-5">
 			<v-col cols="12" md="6">
 				<OfferInfo :offer="offer" />
@@ -99,6 +98,13 @@ async function getOffer() {
 
 	if (response instanceof Error) {
 		console.log(response.message);
+		alertStore.showAlert({
+			icon: 'mdi-alert-circle',
+			title: 'Erro',
+			text: response.message,
+			visible: true,
+			type: 'error',
+		});
 	} else {
 		offer.value = response;
 		console.error(response);
