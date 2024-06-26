@@ -8,9 +8,7 @@ export {}
 declare module 'vue' {
 	export interface GlobalComponents {
 		Alert: (typeof import('./components/Alert.vue'))['default'];
-		AppFooter: (typeof import('./components/AppFooter.vue'))['default'];
 		DeliveryDataForm: (typeof import('./components/forms/DeliveryDataForm.vue'))['default'];
-		HelloWorld: (typeof import('./components/HelloWorld.vue'))['default'];
 		ImageSlider: (typeof import('./components/ImageSlider.vue'))['default'];
 		Loader: (typeof import('./components/Loader.vue'))['default'];
 		OfferCard: (typeof import('./components/offer/OfferCard.vue'))['default'];
