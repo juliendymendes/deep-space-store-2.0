@@ -104,7 +104,6 @@ describe('validateCardExpirationDate', () => {
 	it('should return false because date is null', () => {
 		expect(validateCardExpirationDate(null)).toBeFalsy();
 	});
-	//falso positivo
 	it('should return false because date is a empty string', () => {
 		expect(validateCardExpirationDate('')).toBeFalsy();
 	});
