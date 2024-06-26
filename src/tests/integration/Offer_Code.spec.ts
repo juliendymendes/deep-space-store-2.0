@@ -40,7 +40,7 @@ vi.mock('vue-router', () => ({
 	})),
 }));
 
-describe('[offer_code].vue', () => {
+describe('Checkout', () => {
 	beforeAll(() => {
 		// Initiate msw server
 		server.listen();
