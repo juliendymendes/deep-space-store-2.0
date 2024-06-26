@@ -47,7 +47,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import Offer from '@/types/Offer';
+import { Offer } from '@/types/Offer';
 
 import { useAppStore } from '@/stores/app';
 import { useAlertStore } from '@/stores/alertStore';
@@ -68,11 +68,15 @@ const route = useRoute();
 const router = useRouter();
 const offer = ref<Offer>({
 	code: '',
-	name: '',
-	imagesPaths: [],
-	paymentOptions: [],
+	product: {
+		code: '',
+		name: '',
+		imagesPaths: [],
+		paymentOptions: [],
+		price: 0,
+		itens: [],
+	},
 	price: 0,
-	itens: [],
 });
 const orderStore = useOrderStore();
 

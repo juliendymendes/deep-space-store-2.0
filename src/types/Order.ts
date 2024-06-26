@@ -1,5 +1,5 @@
 import DeliveryAddress from './DeliveryAddress';
-import Offer from './Offer';
+import { Offer } from './Offer';
 import PaymentData from './PaymentData';
 
 import PersonalData from './PersonalData';

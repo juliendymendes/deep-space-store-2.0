@@ -34,10 +34,10 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import Offer from '@/types/Offer';
+import { Offer, Product } from '@/types/Offer';
 import OfferCard from '@/components/offer/OfferCard.vue';
 const offers = ref<Offer[]>();
-const newProduct = ref<Offer>({
+const newProduct = ref<Product>({
 	code: '',
 	name: '',
 	price: 0,
