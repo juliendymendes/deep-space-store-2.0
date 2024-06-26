@@ -6,3 +6,4 @@ node_modules
 *.md
 *.config.ts
 *.config.mjs
+*.d.ts
